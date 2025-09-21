@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌻 Ramo de Girasoles 🌻</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+    height:100vh;
+    overflow:hidden;
+    font-family:'Arial',sans-serif;
+}
+
+/* 🌟 Título */
+.title{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:linear-gradient(45deg,#ffd700,#ffeb3b);
+    color:#1a1a2e;
+    padding:12px 24px;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    box-shadow:0 10px 30px rgba(255,215,0,0.4);
+    animation:glow 3s ease-in-out infinite;
+    z-index:10;
+}
+@keyframes glow{
+    0%,100%{box-shadow:0 10px 30px rgba(255,215,0,0.4)}
+    50%{box-shadow:0 15px 40px rgba(255,215,0,0.7)}
+}
+
+/* ✨ Estrellas */
+.star{
+    position:absolute;
+    background:#ffd700;
+    border-radius:50%;
+    box-shadow:0 0 12px rgba(255,215,0,.8);
+    animation:twinkle 4s infinite alternate;
+}
+@keyframes twinkle{
+    0%{opacity:.3;transform:scale(1)}
+    100%{opacity:1;transform:scale(1.4)}
+}
+
+/* 🌻 Contenedor principal */
+.bouquet-wrapper{
+    position:fixed;
+    top:50%;
+    left:50%;
+    /* ✅ tu ajuste manual */
+    transform:translate(-31%,-50%);
+}
+
+/* Cuadrícula de 4 girasoles */
+.bouquet{
+    position:relative;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap:20px;
+    justify-items:center;
+    align-items:center;
+}
+
+/* Girasol central */
+.center-flower{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:170px;
+    height:170px;
+    z-index:5;
+}
+
+/* Cada girasol */
+.girasol{
+    position:relative;
+    width:150px;
+    height:150px;
+    animation:float 6s ease-in-out infinite alternate;
+    z-index:3;
+}
+@keyframes float{
+    0%{transform:translateY(0px)}
+    100%{transform:translateY(10px)}
+}
+
+/* pétalos */
+.petals{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+}
+.petal{
+    position:absolute;
+    width:36px;
+    height:72px;
+    background:linear-gradient(to bottom,#fff59d 0%,#ffeb3b 30%,#ffc107 70%,#ff8f00 100%);
+    border-radius:50% 50% 50% 50%/80% 80% 20% 20%;
+    transform-origin:50% 90%;
+    box-shadow:inset 0 3px 6px rgba(255,255,255,.5),0 3px 8px rgba(0,0,0,.2);
+}
+
+/* centro oscuro */
+.center{
+    position:absolute;
+    top:45%;
+    left:13%;
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:radial-gradient(circle,#6d4c0f 0%,#3e2506 80%);
+    transform:translate(-50%,-50%);
+    box-shadow:inset 0 4px 8px rgba(0,0,0,.6);
+}
+
+
+
+/* 🌟 Partículas */
+.particle{
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:rgba(255,240,0,0.95);
+    box-shadow:0 0 12px rgba(255,240,0,1);
+    animation:rise 2.5s linear forwards;
+}
+@keyframes rise{
+    0%{transform:translate(0,0) scale(1);opacity:1;}
+    100%{transform:translate(var(--x), var(--y)) scale(0.3);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="title">💛 Flowers for u 💛</div>
+
+<div class="bouquet-wrapper">
+    <div class="bouquet" id="bouquet"></div>
+    <div class="center-flower" id="centerFlower"></div>
+    <!-- ✅ Un solo tallo grande en el centro -->
+    <div class="big-stem"></div>
+</div>
+
+<script>
+function createStars(){
+    const count = 40;
+    for(let i=0;i<count;i++){
+        const s=document.createElement('div');
+        s.className='star';
+        const size=Math.random()*3+2;
+        s.style.width=size+'px';
+        s.style.height=size+'px';
+        s.style.left=Math.random()*100+'%';
+        s.style.top=Math.random()*100+'%';
+        s.style.animationDelay=Math.random()*4+'s';
+        document.body.appendChild(s);
+    }
+}
+
+function createSunflower(){
+    const container=document.createElement('div');
+    container.className='girasol';
+
+    const petals=document.createElement('div');
+    petals.className='petals';
+    const n=16;
+    for(let i=0;i<n;i++){
+        const p=document.createElement('div');
+        p.className='petal';
+        const angle=(360/n)*i;
+        p.style.transform=`rotate(${angle}deg) translateY(-40px)`;
+        petals.appendChild(p);
+    }
+
+    const center=document.createElement('div');
+    center.className='center';
+
+    // Partículas de polen
+    setInterval(()=>{
+        for(let j=0;j<2;j++){
+            const particle=document.createElement('div');
+            particle.className='particle';
+            particle.style.left='50%';
+            particle.style.top='50%';
+            const angle=Math.random()*2*Math.PI;
+            const distance=70+Math.random()*50;
+            const x=Math.cos(angle)*distance+"px";
+            const y=Math.sin(angle)*distance+"px";
+            particle.style.setProperty('--x',x);
+            particle.style.setProperty('--y',y);
+            container.appendChild(particle);
+            setTimeout(()=>particle.remove(),2500);
+        }
+    },400);
+
+    container.appendChild(petals);
+    container.appendChild(center);
+    return container;
+}
+
+window.onload=function(){
+    createStars();
+
+    const bouquet=document.getElementById('bouquet');
+    // 4 flores en las esquinas
+    bouquet.appendChild(createSunflower());
+    bouquet.appendChild(createSunflower());
+    bouquet.appendChild(createSunflower());
+    bouquet.appendChild(createSunflower());
+    // 1 en el centro
+    document.getElementById('centerFlower').appendChild(createSunflower());
+};
+</script>
+
+</body>
+</html>
